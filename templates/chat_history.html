@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversations</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .message {
+            background: #e9e9e9;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .message p {
+            margin: 0;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Conversations</h1>
+        {% for message, last_msg in zipped_messages %}
+            <a href="/view_messages/{{ message[0] }}"> <!-- assuming the chat ID is in message[0] -->
+                <div class="message">
+                    <p><strong>Member 1:</strong> {{ message[1] }}</p>
+                    <p><strong>Member 2:</strong> {{ message[2] }}</p>
+                    {% if last_msg %}
+                        <p><strong>Last Message:</strong> {{ last_msg[0] }}</p>
+                    {% else %}
+                        <p><strong>Last Message:</strong> No message</p>
+                    {% endif %}
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+</body>
+</html>

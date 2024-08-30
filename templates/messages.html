@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Просмотр сообщений</title>
+    <style>
+        /* Ваш CSS код */
+    </style>
+    <script>
+        function loadMessages() {
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', '{{ url_for("view_messages", chat_id=chat_id) }}', true);
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    document.getElementById('messages-container').innerHTML = xhr.responseText;
+                }
+            };
+            xhr.send();
+        }
+
+        setInterval(loadMessages, 3000); // Обновление каждые 3 секунды
+        window.onload = loadMessages;
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Сообщения чата</h2>
+            <a href="{{ url_for('index') }}">На главную</a>
+        </div>
+        <div id="messages-container">
+            <!-- Сообщения будут загружаться сюда -->
+            {% for message in messages %}
+                <div class="message">
+                    <div class="username">{{ message[0] }}</div>
+                    <div class="timestamp">{{ message[2] }}</div>
+                    <div class="text">{{ message[1] }}</div>
+                </div>
+            {% endfor %}
+        </div>
+        <a href="{{ url_for('index') }}" class="back-link">Вернуться на главную</a>
+    </div>
+</body>
+</html>

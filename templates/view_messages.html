@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сообщения</title>
+    <button id="help-button" onclick="window.location.href='/help'">Справка</button>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .message {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .message:last-child {
+            border-bottom: none;
+        }
+        .message .username {
+            font-weight: bold;
+        }
+        .message .timestamp {
+            font-size: 0.9em;
+            color: #999;
+        }
+        .message .text {
+            margin-top: 5px;
+        }
+        .back-link {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+        }
+        form {
+            margin-top: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, textarea, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Сообщения</h1>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message">
+                    <div class="username">{{ message[0] }}</div>
+                    <div class="timestamp">{{ message[2] }}</div>
+                    <div class="text">{{ message[1] }}</div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>Сообщений нет.</p>
+        {% endif %}
+
+        <form action="/send_message" method="POST">
+            <label for="recipient_id">ID получателя: </label>
+            <input type="text" id="recipient_id" name="recipient_id" required>
+
+            <label for="message">Сообщение: </label>
+            <textarea id="message" name="message" required></textarea>
+
+            <button type="submit">Отправить</button>
+        </form>
+
+        <button id="auto-refresh-button">Включить автообновление</button>
+
+        <a href="{{ url_for('index') }}" class="back-link">Вернуться на главную</a>
+    </div>
+    <script>
+        let autoRefreshEnabled = localStorage.getItem('autoRefreshEnabled') === 'true';
+        let refreshTimeoutId;
+
+        function refreshPage() {
+            if (autoRefreshEnabled) {
+                location.reload();
+            }
+        }
+
+        function toggleAutoRefresh() {
+            autoRefreshEnabled = !autoRefreshEnabled;
+            localStorage.setItem('autoRefreshEnabled', autoRefreshEnabled);
+            if (autoRefreshEnabled) {
+                refreshTimeoutId = setTimeout(refreshPage, 3000);
+                document.getElementById('auto-refresh-button').textContent = 'Выключить автообновление';
+            } else {
+                clearTimeout(refreshTimeoutId);
+                document.getElementById('auto-refresh-button').textContent = 'Включить автообновление';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('auto-refresh-button').addEventListener('click', toggleAutoRefresh);
+
+            if (autoRefreshEnabled) {
+                document.getElementById('auto-refresh-button').textContent = 'Выключить автообновление';
+                refreshTimeoutId = setTimeout(refreshPage, 2000);
+            } else {
+                document.getElementById('auto-refresh-button').textContent = 'Включить автообновление';
+            }
+        });
+    </script>
+</body>
+</html>

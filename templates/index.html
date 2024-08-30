@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная</title>
+    <button id="help-button" onclick="window.location.href='/help'">Справка</button>
+</head>
+<body>
+    <h1>Добро пожаловать на главную страницу!</h1>
+    {% if session.get('user') %}
+        <p>Вы вошли под id {{ session.get('user') }}.</p>
+        <a href="{{ url_for('conversations') }}">Просмотреть сообщения</a>
+    {% else %}
+        <p><a href="{{ url_for('login') }}">Войти</a> или <a href="{{ url_for('registrate') }}">Зарегистрироваться</a></p>
+    {% endif %}
+</body>
+</html>
